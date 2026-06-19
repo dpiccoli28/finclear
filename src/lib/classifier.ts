@@ -36,9 +36,10 @@ function classify(tx: RawTransaction, accounts: Account[]): ClassifiedTransactio
   }
 
   // Direction check: credits must map to income accounts, debits to expense/cost
-  if (best) {
-    if (tx.credit > 0 && !['ingreso'].includes(best.type)) best = null
-    if (tx.debit > 0 && ['ingreso'].includes(best.type)) best = null
+  if (best !== null) {
+    const bestType: string = best.type
+    if (tx.credit > 0 && bestType !== 'ingreso') best = null
+    else if (tx.debit > 0 && bestType === 'ingreso') best = null
   }
 
   const confidence = best ? Math.min(99, 80 + bestScore) : 0
